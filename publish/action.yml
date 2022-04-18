@@ -1,0 +1,43 @@
+name: "Publish Techdocs to Backstage"
+description: "Publishes Techdocs to AWS S3 for display in Backstage"
+inputs:
+  aws-bucket-name:
+    description: "The name of the bucket to publish techdocs to."
+
+  aws-region:
+    description: "The AWS region of the S3 bucket."
+    required: true
+
+  aws-access-key-id:
+    description: "The Access Key Id for AWS credentials which have permissions to make changes to the contents of the S3 bucket."
+    required: true
+
+  aws-secret-access-key:
+    description: "The Access Key Secret for AWS credentials which have permissions to make changes to the contents of the S3 bucket."
+    required: true
+
+  entity-namespace:
+    description: "The namespace of the entity for which docs are being published. See https://backstage.io/docs/features/software-catalog/descriptor-format#namespace-optional"
+    required: false
+    default: "default"
+
+  entity-kind:
+    description: "The kind of the entity for which docs are being published. See https://backstage.io/docs/features/software-catalog/descriptor-format#apiversion-and-kind-required"
+    required: true
+
+  entity-name:
+    description: "The name of the entity for which docs are being published. See https://backstage.io/docs/features/software-catalog/descriptor-format#name-required"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Publish techdocs
+      shell: bash
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_REGION: ${{ inputs.aws-region }}
+      run: techdocs-cli publish --publisher-type awsS3 --storage-name
+        ${{ inputs.aws-bucket-name }} --entity
+        ${{ inputs.entity-namespace }}/${{ inputs.entity-kind }}/${{ inputs.entity-name }}

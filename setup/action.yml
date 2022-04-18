@@ -1,0 +1,36 @@
+name: "Setup Techdocs Dependencies"
+description: "Installs dependencies for publishing techdocs"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v3
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
+    - name: Install PlantUML
+      shell: bash
+      run: |
+        curl -o plantuml.jar -L https://sourceforge.net/projects/plantuml/files/1.2022.4/plantuml.1.2022.4.jar/download
+        echo "246d1ed561ebbcac14b2798b45712a9d018024c0  plantuml.jar" | sha1sum -c -
+        mv plantuml.jar /opt/plantuml.jar
+        mkdir -p "$HOME/.local/bin"
+        echo $'#!/bin/sh\n\njava -jar '/opt/plantuml.jar' ${@}' >> "$HOME/.local/bin/plantuml"
+        chmod +x "$HOME/.local/bin/plantuml"
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        sudo apt-get install -y graphviz
+
+    - name: Install techdocs-cli
+      shell: bash
+      run: sudo npm install -g @techdocs/cli
+
+    - name: Install mkdocs and mkdocs-techdocs-core plugin
+      shell: bash
+      run: python -m pip install mkdocs-techdocs-core==1.*

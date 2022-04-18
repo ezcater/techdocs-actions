@@ -1,0 +1,9 @@
+name: "Generate Techdocs"
+description: "Generates techdocs from in-repo markdown"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate techdocs
+      shell: bash
+      run: techdocs-cli generate --no-docker --verbose
