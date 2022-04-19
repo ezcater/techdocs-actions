@@ -1,0 +1,25 @@
+name: "Lint Markdown"
+description: "Lints markdown using the mdl ruby cli."
+inputs:
+  options:
+    description: "Options to provide to mdl"
+    required: false
+
+  directory:
+    description: "The directory containing markdown to lint"
+    required: false
+    default: docs
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Ruby
+      uses: actions/setup-ruby@v1
+
+    - name: Install mdl
+      shell: bash
+      run: gem install mdl
+
+    - name: Lint markdown
+      shell: bash
+      run: mdl ${{ inputs.options }} ${{ inputs.directory }}
