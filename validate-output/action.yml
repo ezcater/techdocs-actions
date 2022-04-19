@@ -1,0 +1,25 @@
+name: "Validate HTML output"
+description: "Runs html-proofer to validate generated documentation."
+inputs:
+  options:
+    description: "Options to provide to htmlproofer"
+    required: false
+
+  output-directory:
+    description: "The output directory to validate"
+    required: false
+    default: site
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Ruby
+      uses: actions/setup-ruby@v1
+
+    - name: Install html-proofer
+      shell: bash
+      run: gem install html-proofer
+
+    - name: Check links with html-proofer
+      shell: bash
+      run: htmlproofer ${{ inputs.options }} ${{ inputs.output-directory }}
