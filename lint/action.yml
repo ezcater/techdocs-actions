@@ -1,8 +1,8 @@
 name: "Lint Markdown"
-description: "Lints markdown using the mdl ruby cli."
+description: "Lints markdown using the markdownlint-cli."
 inputs:
   options:
-    description: "Options to provide to mdl"
+    description: "Options to provide to markdownlint-cli"
     required: false
 
   directory:
@@ -13,13 +13,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Ruby
-      uses: actions/setup-ruby@v1
+    - name: Setup Node
+      uses: actions/setup-node@v3
 
-    - name: Install mdl
+    - name: Install markdownlint-cli
       shell: bash
-      run: gem install mdl
+      run: npm install -g markdownlint-cli
 
     - name: Lint markdown
       shell: bash
-      run: mdl ${{ inputs.options }} ${{ inputs.directory }}
+      run: markdownlint ${{ inputs.options }} ${{ inputs.directory }}
