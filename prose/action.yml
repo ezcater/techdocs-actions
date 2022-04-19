@@ -1,0 +1,26 @@
+name: "Check prose"
+description: "Checks prose using the write-good cli."
+inputs:
+  options:
+    description: "Options to provide to write-good"
+    required: false
+    default: --parse
+
+  glob:
+    description: "A glob specifying the files to evaluate."
+    required: false
+    default: docs/**/*.md
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v3
+
+    - name: Install write-good
+      shell: bash
+      run: npm install -g write-good
+
+    - name: Check prose
+      shell: bash
+      run: write-good ${{ inputs.options }} ${{ inputs.glob }}
