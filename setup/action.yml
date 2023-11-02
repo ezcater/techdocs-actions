@@ -1,10 +1,11 @@
 name: "Setup Techdocs Dependencies"
 description: "Installs dependencies for publishing techdocs"
 inputs:
-  mkdocs-techdocs-core-version:
-    description: "The name of the bucket to publish techdocs to."
+  pip-requirements-txt:
+    description: "Override the dependencies installed by pip"
     required: false
-    default: "1.0.2"
+    default: |
+      mkdocs-techdocs-core==1.0.2
 runs:
   using: "composite"
   steps:
@@ -42,4 +43,8 @@ runs:
 
     - name: Install mkdocs and mkdocs-techdocs-core plugin
       shell: bash
-      run: python -m pip install mkdocs-techdocs-core==${{ inputs.mkdocs-techdocs-core-version }}
+      run: |
+        mkdir -p tmp
+        echo "${{ inputs.pip-requirements-txt }}" > tmp/techdocs-requirements.txt
+        python -m pip install -r tmp/techdocs-requirements.txt
+        rm tmp/techdocs-requirements.txt
