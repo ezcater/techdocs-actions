@@ -5,7 +5,7 @@ inputs:
     description: "Override the dependencies installed by pip"
     required: false
     default: |
-      mkdocs-techdocs-core==1.0.2
+      mkdocs-techdocs-core
 runs:
   using: "composite"
   steps:
